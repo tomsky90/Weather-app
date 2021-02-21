@@ -1,6 +1,13 @@
+const APIkey = "a401cd603ee800caa57e2a96c2193dbe";
+
 class App extends React.Component {
   state = {
     value: "",
+    date: "",
+    city: "",
+    temp: "",
+    weather: "",
+    error: false,
   };
   handleInput = (e) => {
     this.setState({
@@ -9,17 +16,55 @@ class App extends React.Component {
   };
   handleSearch = (e) => {
     e.preventDefault();
+    const API = `http://api.openweathermap.org/data/2.5/weather?q=${this.state.value}&units=metric&APPID=${APIkey}`;
+
+    fetch(API)
+      .then((response) => {
+        if (response.ok) {
+          return response;
+        }
+        throw Error("Nie udało sie");
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        const todaydate = new Date().toLocaleString().slice(0, 10);
+        this.setState({
+          date: todaydate,
+          city: this.state.value,
+          temp: data.main.temp,
+          weather: data.weather[0].description,
+          error: false,
+          value: "",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({
+          error: true,
+          value: "",
+          date: "",
+          city: "",
+          temp: "",
+          weather: "",
+        });
+      });
   };
   render() {
     return (
       <div className="wrapper">
         <header>
-          <h1>London</h1>
+          <h1>
+            {this.state.error
+              ? "Sorry we couldn't find your location"
+              : this.state.city}
+          </h1>
         </header>
         <main>
-          <p className="date">01-02-2021</p>
-          <p className="temperature">30*C</p>
-          <p className="weather">Clouds</p>
+          <p className="date">{this.state.date}</p>
+          <p className="temperature">
+            {this.state.temp} {this.state.temp ? <span>&#176;C</span> : null}
+          </p>
+          <p className="weather">{this.state.weather}</p>
         </main>
         <form onSubmit={this.handleSearch}>
           <label forhtml="city-Input">
