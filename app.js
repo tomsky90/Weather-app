@@ -28,10 +28,11 @@ class App extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         const todaydate = new Date().toLocaleString().slice(0, 10);
+        const temperature = (data.main.temp * 1).toFixed(1);
         this.setState({
           date: todaydate,
           city: this.state.value,
-          temp: data.main.temp,
+          temp: temperature,
           weather: data.weather[0].description,
           error: false,
           value: "",
