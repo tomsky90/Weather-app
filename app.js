@@ -16,7 +16,7 @@ class App extends React.Component {
   };
   handleSearch = (e) => {
     e.preventDefault();
-    const API = `http://api.openweathermap.org/data/2.5/weather?q=${this.state.value}&units=metric&APPID=${APIkey}`;
+    const API = `https://api.openweathermap.org/data/2.5/weather?q=${this.state.value}&units=metric&APPID=${APIkey}`;
 
     fetch(API)
       .then((response) => {
